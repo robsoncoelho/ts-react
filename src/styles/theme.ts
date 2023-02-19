@@ -8,6 +8,9 @@ export default {
       large: '32px',
     }
   },
+  breakpoints: {
+    mobile: '768px'
+  },
   color: {
     gold: '#FDB515',
     goldLight: '#FEDA8A',

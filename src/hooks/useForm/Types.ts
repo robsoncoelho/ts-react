@@ -9,6 +9,7 @@ export interface FieldProps {
 export interface FormProviderProps {
   initialValues: { [arg: string]: FieldValueProps };
   children: React.ReactNode;
+  onSubmit: () => void
   validate: { [arg: string]: (arg: string) => string | boolean | undefined };
 }
 
@@ -20,9 +21,8 @@ export interface FormErrorsProps {
   [arg: string]: string;
 }
 
-export interface FormPropsContext {
+export interface FormContextProps {
   handleChange: (args: FieldProps) => void;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   fields: FormFieldsProps;
   errors: FormErrorsProps | undefined;
   resetError: (args: string) => void;

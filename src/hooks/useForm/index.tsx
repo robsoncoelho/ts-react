@@ -3,14 +3,13 @@ import {
   FieldProps,
   FormErrorsProps,
   FormFieldsProps,
-  FormPropsContext,
+  FormContextProps,
   FormProviderProps,
 } from './Types';
 
-const FormContext = createContext<FormPropsContext>({
+const FormContext = createContext<FormContextProps>({
   resetError: () => null,
   handleChange: () => null,
-  onSubmit: () => null,
   fields: {},
   errors: {},
 });
@@ -19,6 +18,7 @@ const FormProvider = ({
   initialValues,
   validate,
   children,
+  onSubmit,
 }: FormProviderProps) => {
   const [fields, setFields] = useState<FormFieldsProps>(initialValues);
   const [errors, setErrors] = useState<FormErrorsProps>();
@@ -30,7 +30,7 @@ const FormProvider = ({
     }));
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const errors = Object.keys(fields).reduce((prev, next) => {
@@ -42,7 +42,11 @@ const FormProvider = ({
       };
     }, {});
 
-    setErrors(errors);
+    if (Object.values(errors).filter((item) => item).length > 0) {
+      setErrors(errors);
+    } else {
+      onSubmit();
+    }
   };
 
   const resetError = (field: string) => {
@@ -64,7 +68,6 @@ const FormProvider = ({
   const memoizedValue = useMemo(
     () => ({
       handleChange,
-      onSubmit,
       fields,
       errors,
       resetError,
@@ -74,7 +77,7 @@ const FormProvider = ({
 
   return (
     <FormContext.Provider value={memoizedValue}>
-      {children}
+      <form onSubmit={handleSubmit}>{children}</form>
     </FormContext.Provider>
   );
 };

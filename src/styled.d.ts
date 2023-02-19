@@ -15,6 +15,9 @@ declare module 'styled-components' {
         large: string
       }
     }
+    breakpoints: {
+      mobile: string
+    },
     color: {
       gold:string,
       goldLight:string,
