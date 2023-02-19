@@ -1,9 +1,14 @@
 import styled from 'styled-components';
-import Box from '../Box';
-import Title from '../Title';
 import Button from '../Button';
 import Input from '../Input';
 import Checkbox from '../Checkbox';
+import { FieldValueProps } from '../../hooks/useForm/Types';
+import FormProvider, { useForm } from '../../hooks/useForm';
+import {
+  emailValidation,
+  passwordValidation,
+  requiredValidation,
+} from '../../utils/formValidation';
 
 const Form = styled.form`
   margin-top: 32px;
@@ -13,34 +18,51 @@ const SubmitButton = styled(Button)`
   margin-top: 16px;
 `;
 
-const Component = () => (
-  <Box>
-    <Title>Let’s sign you up for Timescale Cloud</Title>
-    <Form>
+const initialValues = {
+  email: '',
+  password: '',
+  terms: false,
+};
+
+const validate = {
+  email: (value: FieldValueProps) => emailValidation(value as string),
+  password: (value: FieldValueProps) => passwordValidation(value as string),
+  terms: (value: FieldValueProps) => requiredValidation(value as boolean),
+};
+
+const FormComponent = () => {
+  const { onSubmit } = useForm();
+
+  return (
+    <Form onSubmit={onSubmit}>
       <Input
-        error={false}
+        name='email'
         placeholder='smith@smithandco.com'
         label='Email address'
-        errorMessage='Invalid email'
       />
-
       <Input
-        error={false}
+        name='password'
+        type='password'
         placeholder='16 characters or more...'
         label='Create password'
-        errorMessage='Invalid password'
       />
-
       <Checkbox
-        error={false}
+        name='terms'
         label='I agree to the Timecale Cloud Terms of Service'
-        errorMessage='Required'
       />
-      <SubmitButton onClick={() => null} variant='primary'>
+      <SubmitButton type='submit' variant='primary'>
         Sign up
       </SubmitButton>
     </Form>
-  </Box>
-);
+  );
+};
+
+const Component = () => {
+  return (
+    <FormProvider initialValues={initialValues} validate={validate}>
+      <FormComponent />
+    </FormProvider>
+  );
+};
 
 export default Component;

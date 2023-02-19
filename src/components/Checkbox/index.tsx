@@ -1,11 +1,9 @@
-import { HTMLInputTypeAttribute } from 'react';
 import styled from 'styled-components';
+import { useForm } from '../../hooks/useForm';
 
 interface ComponentProps {
   label: string;
-  name?: string;
-  error: boolean;
-  errorMessage?: string;
+  name: string;
 }
 
 interface CheckboxProps {
@@ -20,7 +18,6 @@ const InputComponent = styled.div`
 `;
 
 const Checkbox = styled.input<CheckboxProps>`
-  appearance: none;
   height: 16px;
   width: 16px;
   border-radius: 2px;
@@ -50,12 +47,26 @@ const ErrorMessage = styled.p`
   color: ${(props) => props.theme.color.red};
 `;
 
-const Component = ({ label, name, error, errorMessage }: ComponentProps) => {
+const Component = ({ label, name }: ComponentProps) => {
+  const { errors, fields, handleChange, resetError } = useForm();
+
+  const error = errors && errors[name];
+
   return (
     <InputComponent>
-      <Checkbox error={error} name={name} type='checkbox' />
+      <Checkbox
+        error={Boolean(error)}
+        type='checkbox'
+        name={name}
+        checked={fields[name] as boolean}
+        id={name}
+        onChange={(e) => {
+          handleChange({ field: name, value: e.target.checked });
+          resetError(name);
+        }}
+      />
       <Label htmlFor={name}>{label}</Label>
-      {error && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      {Boolean(error) && error && <ErrorMessage>{error}</ErrorMessage>}
     </InputComponent>
   );
 };

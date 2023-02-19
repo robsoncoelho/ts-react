@@ -1,13 +1,12 @@
-import { HTMLInputTypeAttribute } from 'react';
+import React, { HTMLInputTypeAttribute } from 'react';
 import styled from 'styled-components';
+import { useForm } from '../../hooks/useForm';
 
 interface ComponentProps {
   label: string;
-  name?: string;
+  name: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
-  error: boolean;
-  errorMessage?: string;
 }
 
 interface InputProps {
@@ -47,21 +46,26 @@ const ErrorMessage = styled.p`
   color: ${(props) => props.theme.color.red};
 `;
 
-const Component = ({
-  label,
-  name,
-  type,
-  error,
-  errorMessage,
-  placeholder,
-}: ComponentProps) => {
+const Component = ({ label, name, type, placeholder }: ComponentProps) => {
+  const { errors, fields, handleChange, resetError } = useForm();
+
+  const error = errors && errors[name];
+
   return (
     <InputComponent>
       <Label htmlFor={name}>{label}</Label>
-      <Input error={error} name={name} placeholder={placeholder} type={type} />
-      {error && errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
+      <Input
+        value={fields[name] as string | number}
+        onChange={(e) => handleChange({ field: name, value: e.target.value })}
+        onFocus={() => resetError(name)}
+        error={Boolean(error)}
+        name={name}
+        placeholder={placeholder}
+        type={type}
+      />
+      {Boolean(error) && error && <ErrorMessage>{error}</ErrorMessage>}
     </InputComponent>
   );
 };
 
-export default Component;
+export default React.memo(Component);

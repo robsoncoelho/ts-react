@@ -3,8 +3,9 @@ import styled, { css } from 'styled-components';
 
 interface ButtonProps {
   children: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
+  type?: 'submit' | 'reset' | 'button';
   variant: 'primary' | 'secondary';
 }
 
@@ -36,9 +37,19 @@ const Button = styled.button<ButtonProps>`
   ${({ variant }) => variants[variant]}
 `;
 
-const Component = ({ children, onClick, variant, className }: ButtonProps) => {
+const Component = ({
+  children,
+  type = 'button',
+  onClick,
+  variant,
+  className,
+}: ButtonProps) => {
   return (
-    <Button variant={variant} className={className} onClick={onClick}>
+    <Button
+      type={type}
+      variant={variant}
+      className={className}
+      onClick={onClick}>
       {children}
     </Button>
   );
