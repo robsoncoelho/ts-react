@@ -9,6 +9,7 @@ export interface FieldProps {
 export interface FormProviderProps {
   initialValues: { [arg: string]: FieldValueProps };
   children: React.ReactNode;
+  validateOnInit?: boolean;
   onSubmit: () => void
   validate: { [arg: string]: (arg: string) => string | boolean | undefined };
 }

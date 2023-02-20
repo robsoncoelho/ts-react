@@ -14,5 +14,5 @@ export const passwordValidation = (value: string) => {
 }
 
 export const requiredValidation = (value: boolean) => {
-  return !value ? 'required' : undefined
+  return !value ? 'Required' : undefined
 } 

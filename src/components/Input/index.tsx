@@ -68,4 +68,4 @@ const Component = ({ label, name, type, placeholder }: ComponentProps) => {
   );
 };
 
-export default React.memo(Component);
+export default Component;
